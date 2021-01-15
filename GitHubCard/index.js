@@ -4,7 +4,15 @@
     https://api.github.com/users/<your name>
 */
 import axios from "axios";
-console.log(axios.get('https://api.github.com/users/WeiWu2'));
+axios.get('https://api.github.com/users/WeiWu2')
+.then((res) => {
+ 
+  document.querySelector('.cards').appendChild(cardMaker(res.data));
+})
+.catch((error) => 
+{
+  console.log(error);
+});
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -30,15 +38,62 @@ console.log(axios.get('https://api.github.com/users/WeiWu2'));
     user, and adding that card to the DOM.
 */
 
- const followersArray = [];
+ const followersArray = [
+   'tetondan',
+ 'dustinmyers',
+ 'justsml',
+ 'luishrd',
+  'bigknell'
+];
+followersArray.forEach((person) => {
+axios.get('https://api.github.com/users/' + person).then(
+  (res) =>{
+    document.querySelector('.cards').appendChild(cardMaker(res.data));
+
+  }
+);
+});
+console.log(followersArray);
 
  function cardMaker(obj){
+   // creating card component
    const card = document.createElement('div');
+   card.classList.add("card");
+   const cardImg = document.createElement('img');
+   cardImg.src = obj.avatar_url;
+   const cardInfo = document.createElement('div');
+   cardInfo.classList.add("card-info");
+   const cardName =  document.createElement('h3');
+   cardName.classList.add("name");
+   cardName.textContent = obj.name;
+   const cardUserName =  document.createElement('p');
+   cardUserName.classList.add("username");
+   cardUserName.textContent = obj.login;
+   const cardLocation =  document.createElement('p');
+   cardLocation.textContent ="Location: " + obj.location;
+   const cardProfile =  document.createElement('p');
+   cardProfile.textContent = "Profile: ";
+   const cardAddress =  document.createElement('a');
+   cardAddress.href = obj.url;
+   cardAddress.textContent = obj.url;
+   const cardFollowers = document.createElement('p');
+   cardFollowers.textContent = "Followers: " + obj.followers;
+   const cardFollowing = document.createElement('p');
+   cardFollowing.textContent = "Following: " + obj.following;
+   const cardBio = document.createElement('p');
+   cardBio.textContent = "Bio: " + obj.bio;
 
-
-
-
-
+  // ordering correct structure 
+  card.appendChild(cardImg);
+  card.appendChild(cardInfo);
+  cardInfo.appendChild(cardName);
+  cardInfo.appendChild(cardUserName);
+  cardInfo.appendChild(cardLocation);
+  cardInfo.appendChild(cardProfile);
+  cardProfile.appendChild(cardAddress);
+  cardInfo.appendChild(cardFollowers);
+  cardInfo.appendChild(cardFollowing);
+  cardInfo.appendChild(cardBio);
    return card;
  }
 /*
